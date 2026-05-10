@@ -1,8 +1,8 @@
 'use strict';
 
-const strangerVideo   = document.getElementById('stranger-video');
+const strangerVideo    = document.getElementById('stranger-video');
 const jumpscareOverlay = document.getElementById('jumpscare-overlay');
-const jumpscareVideo  = document.getElementById('jumpscare-video');
+const jumpscareImg     = document.getElementById('jumpscare-img');
 const nextSound       = document.getElementById('next-sound');
 const nextBtn         = document.getElementById('next-btn');
 const stopBtn         = document.getElementById('stop-btn');
@@ -12,10 +12,11 @@ const chatInput       = document.getElementById('chat-input');
 const sendBtn         = document.getElementById('send-btn');
 
 // ── Video pool ────────────────────────────────────────────────────
-const PEOPLE_VIDEOS = ['person1.mp4', 'person2.mp4', 'person3.mp4', 'person4.mp4', 'person5.mp4'];
+const PEOPLE_VIDEOS         = ['person1.mp4', 'person2.mp4', 'person3.mp4', 'person4.mp4', 'person_5.mp4'];
+const FIRST_STRANGER_VIDEOS = PEOPLE_VIDEOS.filter(v => v !== 'person4.mp4');
 
 function randomVideo(exclude) {
-  const pool = exclude ? PEOPLE_VIDEOS.filter(v => v !== exclude) : PEOPLE_VIDEOS;
+  const pool = PEOPLE_VIDEOS.filter(v => v !== exclude);
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
@@ -28,29 +29,15 @@ const JUMPSCARE_DURATION_MS = 2_200;
 
 // ── Jumpscare logic ───────────────────────────────────────────────
 function triggerJumpscare() {
-  // Pick a random person video for the jumpscare
-  jumpscareVideo.src = randomVideo();
-  jumpscareVideo.load();
-
-  jumpscareVideo.currentTime = 0;
-  jumpscareVideo.muted = false;
-  jumpscareVideo.volume = 1;
-
-  // Play the next.wav sound effect simultaneously
   nextSound.currentTime = 0;
   nextSound.volume = 1;
   nextSound.play().catch(() => {});
 
-  jumpscareVideo.play().catch(() => {});
   jumpscareOverlay.classList.remove('hidden');
 
   setTimeout(() => {
     jumpscareOverlay.classList.add('hidden');
-    jumpscareVideo.pause();
-    jumpscareVideo.muted = true;
     nextSound.pause();
-
-    // Reconnect screen after scare
     showConnecting(1800);
   }, JUMPSCARE_DURATION_MS);
 }
@@ -134,6 +121,9 @@ function sendMessage() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────
-// person1.mp4 is set in HTML; play it and arm the first jumpscare.
+// Pick a random first stranger, excluding person4.
+const firstVideo = FIRST_STRANGER_VIDEOS[Math.floor(Math.random() * FIRST_STRANGER_VIDEOS.length)];
+strangerVideo.src = firstVideo;
+strangerVideo.load();
 strangerVideo.play().catch(() => {});
 scheduleJumpscare();
