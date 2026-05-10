@@ -11,6 +11,14 @@ const chatMessages    = document.getElementById('chat-messages');
 const chatInput       = document.getElementById('chat-input');
 const sendBtn         = document.getElementById('send-btn');
 
+// ── Video pool ────────────────────────────────────────────────────
+const PEOPLE_VIDEOS = ['person1.mp4', 'person2.mp4', 'person3.mp4', 'person4.mp4', 'person5.mp4'];
+
+function randomVideo(exclude) {
+  const pool = exclude ? PEOPLE_VIDEOS.filter(v => v !== exclude) : PEOPLE_VIDEOS;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 // ── Jumpscare config ──────────────────────────────────────────────
 // Fires between MIN and MAX seconds after page load (random uniform).
 const JUMPSCARE_MIN_MS = 8_000;
@@ -20,7 +28,10 @@ const JUMPSCARE_DURATION_MS = 2_200;
 
 // ── Jumpscare logic ───────────────────────────────────────────────
 function triggerJumpscare() {
-  // Unmute and blast the jumpscare video
+  // Pick a random person video for the jumpscare
+  jumpscareVideo.src = randomVideo();
+  jumpscareVideo.load();
+
   jumpscareVideo.currentTime = 0;
   jumpscareVideo.muted = false;
   jumpscareVideo.volume = 1;
@@ -51,9 +62,12 @@ function scheduleJumpscare() {
 
 // ── Connecting animation ──────────────────────────────────────────
 function showConnecting(durationMs) {
+  const currentSrc = strangerVideo.src.split('/').pop();
   connecting.classList.remove('hidden');
   strangerVideo.pause();
   setTimeout(() => {
+    strangerVideo.src = randomVideo(currentSrc);
+    strangerVideo.load();
     connecting.classList.add('hidden');
     strangerVideo.currentTime = 0;
     strangerVideo.play().catch(() => {});
@@ -120,5 +134,6 @@ function sendMessage() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────
+// person1.mp4 is set in HTML; play it and arm the first jumpscare.
 strangerVideo.play().catch(() => {});
 scheduleJumpscare();
