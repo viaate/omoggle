@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omoggle - Meet Strangers</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="jumpscare-overlay" class="hidden">
+    <video id="jumpscare-video" src="person.mp4" muted playsinline></video>
+  </div>
+
+  <div id="app">
+    <header>
+      <div class="logo">Omoggle</div>
+      <nav>
+        <button class="nav-btn active">Video</button>
+        <button class="nav-btn">Text</button>
+      </nav>
+      <div class="header-right">
+        <span class="online-count">&#x25CF; 42,817 online</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="video-section">
+        <div class="video-pane stranger-pane">
+          <div class="pane-label">Stranger</div>
+          <div class="rating-badge">&#9733; <span id="rating">9.1</span></div>
+          <video id="stranger-video" src="person.mp4" autoplay loop muted playsinline></video>
+          <div class="connecting-overlay hidden" id="connecting">
+            <div class="spinner"></div>
+            <p>Looking for someone...</p>
+          </div>
+        </div>
+
+        <div class="video-pane you-pane">
+          <div class="pane-label">You</div>
+          <div class="you-placeholder">
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="22" r="12" fill="#555"/>
+              <ellipse cx="32" cy="52" rx="20" ry="13" fill="#555"/>
+            </svg>
+            <p>Camera off</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="next-btn" class="btn btn-primary">Next &rsaquo;</button>
+        <button id="stop-btn" class="btn btn-secondary">Stop</button>
+        <div class="interests">
+          <input type="text" placeholder="Add your interests (optional)" class="interest-input" />
+        </div>
+      </div>
+
+      <div class="chat-section">
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-msg system">Connected to a random stranger.</div>
+          <div class="chat-msg stranger"><span>Stranger:</span> hey</div>
+          <div class="chat-msg stranger"><span>Stranger:</span> asl?</div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Type a message..." />
+          <button id="send-btn" class="btn btn-send">Send</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>By using Omoggle you accept the <a href="#">Terms of Service</a>. Unmoderated section.</p>
+    </footer>
+  </div>
+
+  <audio id="next-sound" src="next.wav" preload="auto"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
