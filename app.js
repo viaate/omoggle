@@ -97,20 +97,15 @@ function updateScore(el, state) {
 }
 
 let verdictTimer = null;
-let firstBattle  = true; // suppress verdict until after the first jumpscare
 
 function startScores() {
-  // Stranger always hovers around 9.1
   strangerState.base = 9.1;
-  // Your score: random 5–8.5 range
   yourState.base = randBase(5.0, 8.5);
 
   clearInterval(strangerState.interval);
   clearInterval(yourState.interval);
 
-  // Update each independently at different rates for natural feel
   strangerState.interval = setInterval(() => {
-    // Stranger base drifts slightly
     strangerState.base = +(strangerState.base + (Math.random() - 0.5) * 0.15).toFixed(2);
     strangerState.base = Math.max(8.5, Math.min(9.8, strangerState.base));
     updateScore(strangerScoreEl, strangerState);
@@ -121,12 +116,11 @@ function startScores() {
     yourState.base = Math.max(4.0, Math.min(9.0, yourState.base));
     updateScore(yourScoreEl, yourState);
   }, 320 + Math.random() * 250);
+}
 
-  // Show verdict after scores settle — but skip it during the first battle
+function scheduleVerdict() {
   clearTimeout(verdictTimer);
-  if (!firstBattle) {
-    verdictTimer = setTimeout(showVerdict, 3500);
-  }
+  verdictTimer = setTimeout(showVerdict, 3500);
 }
 
 function stopScores() {
@@ -194,8 +188,6 @@ const JUMPSCARE_HOLD_MS = 2_400;
 // jumpscare.jpg is set at the bottom of init
 
 function triggerJumpscare() {
-  firstBattle = false; // first MOG is now over
-
   nextSound.currentTime = 0;
   nextSound.volume = 1;
   nextSound.play().catch(() => {});
@@ -229,6 +221,7 @@ function showConnecting(durationMs) {
     strangerVideo.currentTime = 0;
     strangerVideo.play().catch(() => {});
     startScores();
+    scheduleVerdict(); // verdict is always shown for battles after the first
   }, durationMs);
 }
 
