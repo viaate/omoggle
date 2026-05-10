@@ -3,73 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Omoggle - Meet Strangers</title>
+  <title>Omoggle - MOG Battle</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div id="jumpscare-overlay" class="hidden">
-    <img id="jumpscare-img" src="jumpscare.jpg" alt="" />
+    <img id="jumpscare-img" alt="" />
   </div>
 
   <div id="app">
     <header>
-      <div class="logo">Omoggle</div>
-      <nav>
-        <button class="nav-btn active">Video</button>
-        <button class="nav-btn">Text</button>
-      </nav>
+      <div class="logo">OMOGGLE</div>
+      <div class="tagline">AI MOG BATTLE</div>
       <div class="header-right">
-        <span class="online-count">&#x25CF; 42,817 online</span>
+        <span class="online-count">&#x25CF; <span id="online-count">38,412</span> online</span>
       </div>
     </header>
 
     <main>
-      <div class="video-section">
-        <div class="video-pane stranger-pane">
-          <div class="pane-label">Stranger</div>
-          <div class="rating-badge">&#9733; <span id="rating">9.1</span></div>
-          <video id="stranger-video" autoplay loop muted playsinline></video>
-          <div class="connecting-overlay hidden" id="connecting">
-            <div class="spinner"></div>
-            <p>Looking for someone...</p>
+      <div class="battle-arena">
+
+        <!-- Stranger side -->
+        <div class="fighter-card" id="stranger-card">
+          <div class="fighter-label">STRANGER</div>
+          <div class="video-wrap">
+            <video id="stranger-video" autoplay loop muted playsinline></video>
+            <div class="scan-line"></div>
+            <div class="connecting-overlay hidden" id="connecting">
+              <div class="spinner"></div>
+              <p>Finding opponent…</p>
+            </div>
           </div>
+          <div class="score-block">
+            <div class="score-label">PSL SCORE</div>
+            <div class="score-value" id="stranger-score">—</div>
+          </div>
+          <div class="verdict-tag hidden" id="stranger-verdict"></div>
         </div>
 
-        <div class="video-pane you-pane">
-          <div class="pane-label">You</div>
-          <div class="you-placeholder">
-            <svg viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="22" r="12" fill="#555"/>
-              <ellipse cx="32" cy="52" rx="20" ry="13" fill="#555"/>
-            </svg>
-            <p>Camera off</p>
-          </div>
+        <!-- VS divider -->
+        <div class="vs-column">
+          <div class="vs-text">VS</div>
+          <button id="next-btn" class="btn-next">NEXT ›</button>
+          <button id="stop-btn" class="btn-stop">STOP</button>
         </div>
+
+        <!-- You side -->
+        <div class="fighter-card" id="you-card">
+          <div class="fighter-label">YOU</div>
+          <div class="video-wrap">
+            <video id="your-video" autoplay muted playsinline></video>
+            <div class="scan-line"></div>
+            <div class="camera-blocked hidden" id="cam-blocked">
+              <p>📷 Camera access denied</p>
+              <p class="small">Allow camera to join the battle</p>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-label">PSL SCORE</div>
+            <div class="score-value" id="your-score">—</div>
+          </div>
+          <div class="verdict-tag hidden" id="your-verdict"></div>
+        </div>
+
       </div>
 
-      <div class="controls">
-        <button id="next-btn" class="btn btn-primary">Next &rsaquo;</button>
-        <button id="stop-btn" class="btn btn-secondary">Stop</button>
-        <div class="interests">
-          <input type="text" placeholder="Add your interests (optional)" class="interest-input" />
-        </div>
-      </div>
-
-      <div class="chat-section">
-        <div class="chat-messages" id="chat-messages">
-          <div class="chat-msg system">Connected to a random stranger.</div>
-          <div class="chat-msg stranger"><span>Stranger:</span> hey</div>
-          <div class="chat-msg stranger"><span>Stranger:</span> asl?</div>
-        </div>
-        <div class="chat-input-row">
-          <input type="text" id="chat-input" placeholder="Type a message..." />
-          <button id="send-btn" class="btn btn-send">Send</button>
-        </div>
+      <div class="result-banner hidden" id="result-banner">
+        <span id="result-text"></span>
       </div>
     </main>
 
     <footer>
-      <p>By using Omoggle you accept the <a href="#">Terms of Service</a>. Unmoderated section.</p>
+      <p>Omoggle uses AI facial analysis. Scores are computed via the PSL biometric scale.</p>
     </footer>
   </div>
 
