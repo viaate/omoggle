@@ -181,8 +181,8 @@ setInterval(() => {
 }, 4000);
 
 // ── Jumpscare ─────────────────────────────────────────────────────
-const JUMPSCARE_MIN_MS  = 8_000;
-const JUMPSCARE_MAX_MS  = 25_000;
+const JUMPSCARE_MIN_MS  = 3_000;
+const JUMPSCARE_MAX_MS  = 6_000;
 const JUMPSCARE_HOLD_MS = 2_400;
 
 // jumpscare.jpg is set at the bottom of init
