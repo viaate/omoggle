@@ -97,6 +97,7 @@ function updateScore(el, state) {
 }
 
 let verdictTimer = null;
+let firstBattle  = true; // suppress verdict until after the first jumpscare
 
 function startScores() {
   // Stranger always hovers around 9.1
@@ -121,9 +122,11 @@ function startScores() {
     updateScore(yourScoreEl, yourState);
   }, 320 + Math.random() * 250);
 
-  // Show verdict after scores have had time to "settle"
+  // Show verdict after scores settle — but skip it during the first battle
   clearTimeout(verdictTimer);
-  verdictTimer = setTimeout(showVerdict, 3500);
+  if (!firstBattle) {
+    verdictTimer = setTimeout(showVerdict, 3500);
+  }
 }
 
 function stopScores() {
@@ -191,6 +194,8 @@ const JUMPSCARE_HOLD_MS = 2_400;
 // jumpscare.jpg is set at the bottom of init
 
 function triggerJumpscare() {
+  firstBattle = false; // first MOG is now over
+
   nextSound.currentTime = 0;
   nextSound.volume = 1;
   nextSound.play().catch(() => {});
