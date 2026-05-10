@@ -1,6 +1,14 @@
 'use strict';
 
 // ── DOM refs ──────────────────────────────────────────────────────
+const introScreen      = document.getElementById('intro-screen');
+const introVideoEl     = document.getElementById('intro-video');
+const introCamPlaceholder = document.getElementById('intro-cam-placeholder');
+const camRequestBtn    = document.getElementById('cam-request-btn');
+const playBtn          = document.getElementById('play-btn');
+const introHint        = document.getElementById('intro-hint');
+const appEl            = document.getElementById('app');
+
 const strangerVideo    = document.getElementById('stranger-video');
 const yourVideo        = document.getElementById('your-video');
 const jumpscareOverlay = document.getElementById('jumpscare-overlay');
@@ -30,11 +38,30 @@ function randomVideo(exclude) {
 }
 
 // ── Camera ────────────────────────────────────────────────────────
-async function startCamera() {
+let cameraStream = null;
+
+async function requestCamera() {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    yourVideo.srcObject = stream;
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    // Show live preview on intro screen
+    introVideoEl.srcObject = cameraStream;
+    introCamPlaceholder.style.display = 'none';
+    introVideoEl.style.display = 'block';
+    camRequestBtn.textContent = '✓ Camera ready';
+    camRequestBtn.classList.add('granted');
+    introHint.textContent = 'Looking good! Ready to enter the battle?';
+    playBtn.classList.remove('hidden');
   } catch {
+    introHint.textContent = 'Camera denied — you can still battle without a score.';
+    introHint.style.color = '#e94560';
+    playBtn.classList.remove('hidden');
+  }
+}
+
+function attachCameraToGame() {
+  if (cameraStream) {
+    yourVideo.srcObject = cameraStream;
+  } else {
     camBlocked.classList.remove('hidden');
   }
 }
@@ -161,11 +188,7 @@ const JUMPSCARE_MIN_MS  = 8_000;
 const JUMPSCARE_MAX_MS  = 25_000;
 const JUMPSCARE_HOLD_MS = 2_400;
 
-let jumpscareLoaded = false;
-// Pre-load the image so it pops instantly
-jumpscareImg.onload  = () => { jumpscareLoaded = true; };
-jumpscareImg.onerror = () => { jumpscareLoaded = false; };
-jumpscareImg.src = 'jumpscare.jpg';
+// jumpscare.jpg is set at the bottom of init
 
 function triggerJumpscare() {
   nextSound.currentTime = 0;
@@ -209,7 +232,7 @@ nextBtn.addEventListener('click', () => {
   nextSound.currentTime = 0;
   nextSound.play().catch(() => {});
   showConnecting(1500);
-  scheduleJumpscare();
+  // No jumpscare on Next — it only fires on the random timer
 });
 
 stopBtn.addEventListener('click', () => {
@@ -218,13 +241,24 @@ stopBtn.addEventListener('click', () => {
   strangerVideo.pause();
 });
 
+// ── Intro screen ──────────────────────────────────────────────────
+camRequestBtn.addEventListener('click', requestCamera);
+
+playBtn.addEventListener('click', () => {
+  introScreen.classList.add('hidden');
+  appEl.classList.remove('hidden');
+  attachCameraToGame();
+  startGame();
+});
+
+function startGame() {
+  const firstVideo = FIRST_STRANGER_VIDEOS[Math.floor(Math.random() * FIRST_STRANGER_VIDEOS.length)];
+  strangerVideo.src = firstVideo;
+  strangerVideo.load();
+  strangerVideo.play().catch(() => {});
+  startScores();
+  scheduleJumpscare();
+}
+
 // ── Init ──────────────────────────────────────────────────────────
-startCamera();
-
-const firstVideo = FIRST_STRANGER_VIDEOS[Math.floor(Math.random() * FIRST_STRANGER_VIDEOS.length)];
-strangerVideo.src = firstVideo;
-strangerVideo.load();
-strangerVideo.play().catch(() => {});
-
-startScores();
-scheduleJumpscare();
+jumpscareImg.src = 'jumpscare.jpg';

@@ -12,7 +12,35 @@
     <img id="jumpscare-img" alt="" />
   </div>
 
-  <div id="app">
+  <!-- Intro / camera permission screen -->
+  <div id="intro-screen">
+    <div class="intro-card">
+      <div class="intro-logo">OMOGGLE</div>
+      <div class="intro-sub">AI MOG BATTLE</div>
+      <div class="intro-divider"></div>
+      <div class="intro-cam-preview">
+        <video id="intro-video" autoplay muted playsinline></video>
+        <div id="intro-cam-placeholder">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="30" r="14" fill="#2a2a3e"/>
+            <ellipse cx="40" cy="62" rx="24" ry="16" fill="#2a2a3e"/>
+          </svg>
+          <p>Camera preview</p>
+        </div>
+        <div class="intro-scan-line"></div>
+      </div>
+      <button id="cam-request-btn" class="btn-cam-request">
+        <span class="cam-icon">📷</span> Allow Camera
+      </button>
+      <p class="intro-hint" id="intro-hint">Camera access is required to receive a PSL score</p>
+      <button id="play-btn" class="btn-play hidden">
+        ▶&nbsp; ENTER MOG BATTLE
+      </button>
+      <p class="intro-fine">By continuing you accept the <a href="#">Terms of Service</a>.</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
     <header>
       <div class="logo">OMOGGLE</div>
       <div class="tagline">AI MOG BATTLE</div>
